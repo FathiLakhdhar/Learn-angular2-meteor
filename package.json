@@ -1,5 +1,5 @@
 {
-  "name": "angular2-meteor-base",
+  "name": "Learn-angular2-meteor",
   "private": true,
   "scripts": {
     "start": "meteor run",

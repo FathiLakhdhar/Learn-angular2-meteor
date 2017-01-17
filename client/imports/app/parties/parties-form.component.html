@@ -1,0 +1,12 @@
+<form [formGroup]="addForm" #f="ngForm" (ngSubmit)="addParty()">
+  <label>Name</label>
+  <input type="text" formControlName="name" placeholder="Name">
+ 
+  <label>Description</label>
+  <input type="text" formControlName="description" placeholder="Description">
+ 
+  <label>Location</label>
+  <input type="text" formControlName="location" placeholder="Location">
+  
+  <button [disabled]="!f.valid" type="submit">Add</button>
+</form>

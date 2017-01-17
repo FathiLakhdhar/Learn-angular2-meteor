@@ -1,32 +1,23 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { AppComponent } from "./app.component";
-import { DemoComponent } from "./demo/demo.component";
-import { DemoDataService } from "./demo/demo-data.service";
+import { NgModule } from '@angular/core';
+import { RouterModule} from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { PARTIES_DECLARATIONS } from './parties';
+import {routes} from './app.routes';
+
 
 @NgModule({
-  // Components, Pipes, Directive
-  declarations: [
-    AppComponent,
-    DemoComponent
-  ],
-  // Entry Components
-  entryComponents: [
-    AppComponent
-  ],
-  // Providers
-  providers: [
-    DemoDataService
-  ],
-  // Modules
-  imports: [
-    BrowserModule
-  ],
-  // Main Component
-  bootstrap: [ AppComponent ]
+    imports: [
+        BrowserModule,
+        FormsModule, ReactiveFormsModule,
+        RouterModule.forRoot(routes)
+    ],
+    declarations: [
+        AppComponent,
+        PARTIES_DECLARATIONS,
+    ],
+    bootstrap: [AppComponent],
 })
-export class AppModule {
-  constructor() {
 
-  }
-}
+export class AppModule{}
