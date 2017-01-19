@@ -1,12 +1,19 @@
 <form [formGroup]="addForm" #f="ngForm" (ngSubmit)="addParty()">
   <label>Name</label>
-  <input type="text" formControlName="name" placeholder="Name">
+  <input class="form-control" type="text" formControlName="name" placeholder="Name">
  
   <label>Description</label>
-  <input type="text" formControlName="description" placeholder="Description">
+  <input class="form-control" type="text" formControlName="description" placeholder="Description">
  
   <label>Location</label>
-  <input type="text" formControlName="location" placeholder="Location">
+  <input class="form-control" type="text" formControlName="location" placeholder="Location">
+
+  <div class="form-check">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" formControlName="public">
+      Public
+    </label>
+  </div>
   
-  <button [disabled]="!f.valid" type="submit">Add</button>
+  <button [disabled]="!f.valid" type="submit" class="btn btn-secondary">Add</button>
 </form>

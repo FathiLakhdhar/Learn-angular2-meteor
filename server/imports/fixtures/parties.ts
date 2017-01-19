@@ -3,20 +3,16 @@ import { Party } from '../../../both/models/party.model';
 
 export function loadParties() {
     if (Parties.find().cursor.count() === 0) {
-        const parties: Party[] = [{
-            name: 'Dubstep-Free Zone',
-            description: 'Can we please just for an evening not listen to dubstep.',
-            location: 'Palo Alto'
-        }, {
-            name: 'All dubstep all the time',
-            description: 'Get it on!',
-            location: 'Palo Alto'
-        }, {
-            name: 'Savage lounging',
-            description: 'Leisure suit required. And only fiercest manners.',
-            location: 'San Francisco'
-        }];
+        let bool: boolean= true;
+        for (var i = 0; i < 27; i++) {
+            bool= !bool;
+            Parties.insert({
+                name: Fake.sentence(3),
+                location: Fake.sentence(3),
+                description: Fake.sentence(10),
+                public: bool
+            });
+        }
 
-        parties.forEach((party: Party)=> Parties.insert(party));
     }
 }

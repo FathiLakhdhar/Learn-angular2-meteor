@@ -19,12 +19,17 @@ export class PartiesFormComponent implements OnInit {
             name: [null, Validators.required],
             description: [],
             location: [null, Validators.required],
+            public: [false]
         });
     }
 
     addParty() {
+        if (!Meteor.userId()) {
+            alert('Please log in to add a party');
+            return;
+        }
         if (this.addForm.valid) {
-            Parties.insert(this.addForm.value);
+            Parties.insert(Object.assign({}, this.addForm.value, { owner: Meteor.userId() }));
 
             this.addForm.reset();
         }

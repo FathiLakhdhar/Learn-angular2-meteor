@@ -1,10 +1,38 @@
-<parties-form></parties-form>
+<div class="row">
 
-<div>
-    <ul *ngFor="let party of parties | async">
-        <li><a [routerLink]="['/party', party._id]">{{party.name}}</a></li>
-        <li>{{party.description}}</li>
-        <li>{{party.location}}</li>
-        <button (click)="remove(party)">remove</button>
-    </ul>
+    <div class="col-lg-3">
+        <select class="form-control" #sort (change)="changeSortOrder(sort.value)">
+            <option value="1" selected>Ascending</option>
+            <option value="-1">Descending</option>
+        </select>
+
+        <parties-form></parties-form>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input class="form-control" type="text" #searchtext placeholder="Search by Location">
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button" (click)="search(searchtext.value)">Search</button>
+            </span>
+        </div>
+        
+        <div>
+            <div class="card" *ngFor="let party of parties | async">
+                <div class="card-block">
+                    <h4 class="card-title">{{party.name}}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">{{party.location}}</h6>
+                    <p class="card-text">{{party.description}}</p>
+                    <a href="#" [routerLink]="['/party', party._id]" class="card-link">Show</a>
+                    <a href="#" class="card-link" (click)="remove(party)">Remove</a>
+                </div>
+            </div>
+            <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
+        </div>
+
+
+
+
+
+    </div>
 </div>
