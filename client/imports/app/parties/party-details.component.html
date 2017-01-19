@@ -1,14 +1,27 @@
-<form *ngIf="party" (submit)="saveParty()">
-  <label>Name</label>
-  <input class="form-control" type="text" [(ngModel)]="party.name" name="name">
- 
-  <label>Description</label>
-  <input class="form-control" type="text" [(ngModel)]="party.description" name="description">
- 
-  <label>Location</label>
-  <input class="form-control" type="text" [(ngModel)]="party.location" name="location">
- 
-  <button class="btn" type="submit">Save</button>
-  
-</form>
-<a [routerLink]="['/']">Cancel</a>
+<div class="row">
+  <div class="col-lg-4">
+    <form *ngIf="party" (submit)="saveParty()">
+      <label>Name</label>
+      <input class="form-control" type="text" [(ngModel)]="party.name" name="name">
+
+      <label>Description</label>
+      <input class="form-control" type="text" [(ngModel)]="party.description" name="description">
+
+      <label>Location</label>
+      <input class="form-control" type="text" [(ngModel)]="party.location" name="location">
+
+      <button class="btn" type="submit">Save</button>
+
+    </form>
+    <a [routerLink]="['/']">Cancel</a>
+  </div>
+
+  <!-- list users uninvited -->
+  <div class="col-lg-4">
+    <h2>list users uninvited</h2>
+    <ul>
+      <li *ngFor="let user of users | async"> {{user.emails[0].address}} </li>
+    </ul>
+  </div>
+
+</div>

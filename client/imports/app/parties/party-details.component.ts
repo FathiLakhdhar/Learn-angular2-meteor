@@ -5,9 +5,14 @@ import { ActivatedRoute } from '@angular/router';
 import template from './party-details.component.html';
 import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 import { MeteorObservable } from 'meteor-rxjs';
+
 import { Parties } from '../../../../both/collections/parties.collection';
 import { Party } from '../../../../both/models/party.model';
+import { Users } from '../../../../both/collections/users.collection';
+import { User } from '../../../../both/models/user.model';
+
 
 
 @Component({
@@ -19,6 +24,8 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
     paramsSub: Subscription;
     party: Party;
     partySub: Subscription;
+    users: Observable<User[]>;
+    uninvitedSub: Subscription;
 
     constructor(private route: ActivatedRoute, private location: Location) { }
 
@@ -35,15 +42,29 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
                 }
 
                 this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe(() => {
-                    
+
                     this.party = Parties.findOne(this.partyId);
                 });
-            });
+            });// end paramsSub
+
+        if (this.uninvitedSub) {
+            this.uninvitedSub.unsubscribe();
+        }
+
+        this.uninvitedSub = MeteorObservable.subscribe('uninvited', this.partyId).subscribe(() => {
+            this.users = Users.find({
+                _id: {
+                    $ne: Meteor.userId()
+                }
+            }).zone();
+        });
+
     }
 
     ngOnDestroy() {
         this.paramsSub.unsubscribe();
         this.partySub.unsubscribe();
+        this.uninvitedSub.unsubscribe();
     }
     canActivate() {
         console.log('canactivate : ');

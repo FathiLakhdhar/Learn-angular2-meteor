@@ -10,7 +10,8 @@ export function loadParties() {
                 name: Fake.sentence(3),
                 location: Fake.sentence(3),
                 description: Fake.sentence(10),
-                public: bool
+                public: bool,
+                invited: [],
             });
         }
 
