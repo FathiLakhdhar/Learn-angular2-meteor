@@ -18,7 +18,7 @@
 
   <!-- list users uninvited -->
   <div class="col-lg-4">
-    <h2>list users uninvited</h2>
+    <h3>Users to invite:</h3>
     <ul>
       <li *ngFor="let user of users | async"> {{user.emails[0].address}} </li>
     </ul>
