@@ -29,6 +29,8 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
     users: Observable<User[]>;
     uninvitedSub: Subscription;
 
+    user : Meteor.User;
+
     constructor(private route: ActivatedRoute, private location: Location) { }
 
     //
@@ -43,7 +45,8 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
                     this.partySub.unsubscribe();
                 }
 
-                this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe(() => {
+                this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe((success) => {
+                    console.log(success);
                     MeteorObservable.autorun().subscribe(() => {
                         this.party = Parties.findOne(this.partyId);
                         this.getUsers(this.party);
@@ -63,10 +66,11 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
 
     getUsers(party: Party) {
         if (party) {
+            let partyInvited= party.invited || [];
             this.users = Users.find({
                 _id: {
-                    $nin: party.invited || [],
-                    $ne: Meteor.userId() && party.owner
+                    $nin: partyInvited.concat([this.user._id,]),
+                    $ne: party.owner
                 }
             }).zone();
         }
@@ -114,6 +118,16 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
                 alert(`Failed to reply due to ${error}`);
             }
         );
+    }
+
+    get isInvited(): boolean {
+        if (this.party && this.user) {
+            const invited = this.party.invited || [];
+
+            return invited.indexOf(this.user._id) !== -1;
+        }
+
+        return false;
     }
 
     goBack() {

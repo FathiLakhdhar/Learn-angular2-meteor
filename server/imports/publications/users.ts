@@ -10,7 +10,7 @@ Meteor.publish('uninvited', function (partyId: string) {
     return Meteor.users.find({
         _id: {
             $nin: party.invited || [],
-            $ne: this.userId && party.owner
+            $ne: this.userId
         }
     });
 });

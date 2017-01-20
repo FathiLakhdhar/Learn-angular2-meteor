@@ -11,7 +11,7 @@
       <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.location" name="location">
       <div class="form-check">
         <label class="form-check-label">
-          <input type="checkbox" class="form-check-input" [(ngModel)]="party.public" name="public">
+          <input [disabled]="party.owner !== user?._id" type="checkbox" class="form-check-input" [(ngModel)]="party.public" name="public">
             Public
         </label>
       </div>
@@ -22,7 +22,7 @@
   </div>
 
   <!-- list users uninvited -->
-  <div class="col-lg-4">
+  <div *ngIf="!party.public" class="col-lg-4">
     <h3>Users to invite:</h3>
     <ul>
       <li *ngFor="let user of users | async"> {{user.emails[0].address}} <button class="btn btn-link" (click)="invite(user)">Invite</button> </li>
@@ -30,7 +30,7 @@
   </div>
 
 
-  <div *ngIf="party.owner !== user?._id" class="col-lg-4">
+  <div *ngIf="isInvited" class="col-lg-4">
     <h2>Reply to the invitation</h2>
     <input class="btn btn-success" type="button" value="I'm going!" (click)="reply('yes')">
     <input class="btn btn-warning" type="button" value="Maybe" (click)="reply('maybe')">
