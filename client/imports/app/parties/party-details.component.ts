@@ -91,7 +91,8 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
             $set: {
                 name: this.party.name,
                 description: this.party.description,
-                location: this.party.location
+                location: this.party.location,
+                public: this.party.public
             }
         });
     }

@@ -1,6 +1,6 @@
 <div class="row" *ngIf="party">
   <div class="col-lg-4">
-    <form  (submit)="saveParty()">
+    <form (submit)="saveParty()">
       <label>Name</label>
       <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.name" name="name">
 
@@ -9,7 +9,12 @@
 
       <label>Location</label>
       <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.location" name="location">
-
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" [(ngModel)]="party.public" name="public">
+            Public
+        </label>
+      </div>
       <button [disabled]="party.owner !== user?._id" class="btn" type="submit">Save</button>
 
     </form>
