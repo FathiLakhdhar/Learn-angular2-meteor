@@ -1,16 +1,16 @@
-<div class="row">
+<div class="row" *ngIf="party">
   <div class="col-lg-4">
-    <form *ngIf="party" (submit)="saveParty()">
+    <form  (submit)="saveParty()">
       <label>Name</label>
-      <input class="form-control" type="text" [(ngModel)]="party.name" name="name">
+      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.name" name="name">
 
       <label>Description</label>
-      <input class="form-control" type="text" [(ngModel)]="party.description" name="description">
+      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.description" name="description">
 
       <label>Location</label>
-      <input class="form-control" type="text" [(ngModel)]="party.location" name="location">
+      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.location" name="location">
 
-      <button class="btn" type="submit">Save</button>
+      <button [disabled]="party.owner !== user._id" class="btn" type="submit">Save</button>
 
     </form>
     <a [routerLink]="['/']">Cancel</a>
@@ -20,8 +20,16 @@
   <div class="col-lg-4">
     <h3>Users to invite:</h3>
     <ul>
-      <li *ngFor="let user of users | async"> {{user.emails[0].address}} </li>
+      <li *ngFor="let user of users | async"> {{user.emails[0].address}} <button class="btn btn-link" (click)="invite(user)">Invite</button> </li>
     </ul>
+  </div>
+
+
+  <div *ngIf="party.owner !== user._id" class="col-lg-4">
+    <h2>Reply to the invitation</h2>
+    <input class="btn btn-success" type="button" value="I'm going!" (click)="reply('yes')">
+    <input class="btn btn-warning" type="button" value="Maybe" (click)="reply('maybe')">
+    <input class="btn btn-danger" type="button" value="No" (click)="reply('no')">
   </div>
 
 </div>

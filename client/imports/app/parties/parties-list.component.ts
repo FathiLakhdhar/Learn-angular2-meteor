@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { MeteorObservable } from 'meteor-rxjs';
 import { PaginationService } from 'ng2-pagination';
 import { Counts } from 'meteor/tmeasday:publish-counts';
+import {InjectUser} from 'angular2-meteor-accounts-ui';
 
 import 'rxjs/add/operator/combineLatest';
 
@@ -18,6 +19,7 @@ import template from './parties-list.component.html';
     selector: 'parties-list',
     template
 })
+@InjectUser('user')
 export class PartiesListComponent implements OnInit, OnDestroy {
     parties: Observable<Party[]>;
     partiesSub: Subscription;

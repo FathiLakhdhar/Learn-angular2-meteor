@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PARTIES_DECLARATIONS } from './parties';
+import { SHARED_DECLARATIONS } from './shared';
 import {routes, ROUTES_PROVIDERS} from './app.routes';
 import { AccountsModule } from 'angular2-meteor-accounts-ui';
 import {Ng2PaginationModule} from 'ng2-pagination';
@@ -19,7 +20,7 @@ import {Ng2PaginationModule} from 'ng2-pagination';
     ],
     declarations: [
         AppComponent,
-        PARTIES_DECLARATIONS,
+        PARTIES_DECLARATIONS,SHARED_DECLARATIONS,
     ],
     providers: [
         ROUTES_PROVIDERS

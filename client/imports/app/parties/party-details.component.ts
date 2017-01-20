@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { MeteorObservable } from 'meteor-rxjs';
+import { InjectUser } from 'angular2-meteor-accounts-ui';
 
 import { Parties } from '../../../../both/collections/parties.collection';
 import { Party } from '../../../../both/models/party.model';
@@ -19,6 +20,7 @@ import { User } from '../../../../both/models/user.model';
     selector: 'party-details',
     template
 })
+@InjectUser('user')
 export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
     partyId: string;
     paramsSub: Subscription;
@@ -42,8 +44,10 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
                 }
 
                 this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe(() => {
-
-                    this.party = Parties.findOne(this.partyId);
+                    MeteorObservable.autorun().subscribe(() => {
+                        this.party = Parties.findOne(this.partyId);
+                        this.getUsers(this.party);
+                    });
                 });
             });// end paramsSub
 
@@ -52,13 +56,20 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
         }
 
         this.uninvitedSub = MeteorObservable.subscribe('uninvited', this.partyId).subscribe(() => {
-            this.users = Users.find({
-                _id: {
-                    $ne: Meteor.userId()
-                }
-            }).zone();
+            this.getUsers(this.party);
         });
 
+    }
+
+    getUsers(party: Party) {
+        if (party) {
+            this.users = Users.find({
+                _id: {
+                    $nin: party.invited || [],
+                    $ne: Meteor.userId() && party.owner
+                }
+            }).zone();
+        }
     }
 
     ngOnDestroy() {
@@ -85,6 +96,24 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
         });
     }
 
+    invite(user: Meteor.User): void {
+        MeteorObservable.call('invite', this.partyId, user._id).subscribe(() => {
+            //success
+            alert('User successfully invited.');
+        }, (error) => {
+            alert(`Failed to invite due to ${error}`);
+        });
+    }
+    reply(rsvp: string) {
+        MeteorObservable.call('reply', this.partyId, rsvp).subscribe(
+            () => {
+                alert('You successfully replied.');
+            },
+            (error) => {
+                alert(`Failed to reply due to ${error}`);
+            }
+        );
+    }
 
     goBack() {
         this.location.back();

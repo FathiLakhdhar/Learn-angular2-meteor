@@ -30,10 +30,17 @@ function buildQuery(partyId?: string, location?: string) {
           $exists: true
         }
       }]
-    }]
+    },// or invited
+    {
+      $and: [
+        { invited: this.userId },
+        { invited: { $exists: true } }
+      ]
+    }
+    ]
   };
 
-  
+
 
   if (partyId) {
     return {
