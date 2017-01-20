@@ -34,7 +34,7 @@
         <h6 class="card-subtitle mb-2 text-muted">{{party.location}}</h6>
         <p class="card-text">{{party.description}}</p>
         <a href="#" [routerLink]="['/party', party._id]" class="card-link">Show</a>
-        <a *ngIf="party.owner === user._id" href="#" class="card-link" (click)="remove(party)">Remove</a>
+        <a *ngIf="party.owner === user?._id" href="#" class="card-link" (click)="remove(party)">Remove</a>
     </div>
     <div class="card-block">
         Who is coming: Yes - {{party | rsvp:'yes'}} Maybe - {{party | rsvp:'maybe'}} No - {{party | rsvp:'no'}}

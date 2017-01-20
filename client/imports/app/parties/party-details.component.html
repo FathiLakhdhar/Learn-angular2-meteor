@@ -2,15 +2,15 @@
   <div class="col-lg-4">
     <form  (submit)="saveParty()">
       <label>Name</label>
-      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.name" name="name">
+      <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.name" name="name">
 
       <label>Description</label>
-      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.description" name="description">
+      <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.description" name="description">
 
       <label>Location</label>
-      <input [disabled]="party.owner !== user._id" class="form-control" type="text" [(ngModel)]="party.location" name="location">
+      <input [disabled]="party.owner !== user?._id" class="form-control" type="text" [(ngModel)]="party.location" name="location">
 
-      <button [disabled]="party.owner !== user._id" class="btn" type="submit">Save</button>
+      <button [disabled]="party.owner !== user?._id" class="btn" type="submit">Save</button>
 
     </form>
     <a [routerLink]="['/']">Cancel</a>
@@ -25,7 +25,7 @@
   </div>
 
 
-  <div *ngIf="party.owner !== user._id" class="col-lg-4">
+  <div *ngIf="party.owner !== user?._id" class="col-lg-4">
     <h2>Reply to the invitation</h2>
     <input class="btn btn-success" type="button" value="I'm going!" (click)="reply('yes')">
     <input class="btn btn-warning" type="button" value="Maybe" (click)="reply('maybe')">
