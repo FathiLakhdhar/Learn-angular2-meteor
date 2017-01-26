@@ -14,10 +14,13 @@ import { Party } from '../../../../both/models/party.model';
 import { Options } from '../../../../both/models/options';
 
 import template from './parties-list.component.html';
+import style from './parties-list.component.scss';
+
 
 @Component({
     selector: 'parties-list',
-    template
+    template,
+    styles: [style]
 })
 @InjectUser('user')
 export class PartiesListComponent implements OnInit, OnDestroy {
