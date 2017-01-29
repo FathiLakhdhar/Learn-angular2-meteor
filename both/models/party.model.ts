@@ -7,6 +7,7 @@ export interface Party extends CollectionObject{
     public: boolean;
     invited?: string[];
     rsvps?: RSVP[];
+    images?: string[];
 }
 
 

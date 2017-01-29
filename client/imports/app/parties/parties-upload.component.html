@@ -1,0 +1,6 @@
+<div class="parties-update-container">
+    <div fileDrop [ngClass]="{'file-is-over': fileIsOver, 'file-is-not-over': !fileIsOver, 'file-uploading': uploading}" (fileOver)="fileOver($event)" (onFileDrop)="onFileDrop($event)">
+        <div class="txt_drop_file">Drop an image to here</div>
+    </div>
+
+</div>

@@ -1,4 +1,5 @@
 import { Parties } from '../collections/parties.collection';
+import { Images } from '../collections/images.collection';
 //import {Email} from 'meteor/email';
 //import {check} from 'meteor/check';
 
@@ -75,9 +76,39 @@ Meteor.methods({
             }
         } else {
             // add new rsvp entry
-            Parties.update(partyId,{ $push: { rsvps: { userId: this.userId, response: rsvp } } });
-                
+            Parties.update(partyId, { $push: { rsvps: { userId: this.userId, response: rsvp } } });
+
         }
+
+
+    },
+
+
+    removeParty: function (partyId: string) {
+        check(partyId, String);
+
+        if (!Meteor.user()) {
+            throw new Meteor.Error('500', 'You are not loggedIn');
+        }
+
+        let party = Parties.collection.findOne(partyId);
+        if (!party) throw new Meteor.Error('404', 'No such party');
+
+        if (party.owner !== this.userId)
+            throw new Meteor.Error('403', 'No permissions!');
+
+
+        if (party.images) {
+            Images.remove({
+                _id: {
+                    $in: party.images || []
+                }
+            });
+        }
+
+        Parties.remove({ _id: party._id });
+
+
 
 
     },

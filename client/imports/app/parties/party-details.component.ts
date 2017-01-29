@@ -6,13 +6,18 @@ import template from './party-details.component.html';
 import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { MeteorObservable } from 'meteor-rxjs';
+import { Subject } from 'rxjs/Subject';
+import { MeteorObservable, ObservableCursor } from 'meteor-rxjs';
 import { InjectUser } from 'angular2-meteor-accounts-ui';
 
 import { Parties } from '../../../../both/collections/parties.collection';
 import { Party } from '../../../../both/models/party.model';
 import { Users } from '../../../../both/collections/users.collection';
 import { User } from '../../../../both/models/user.model';
+import { Images, Thumbs } from '../../../../both/collections/images.collection';
+import { Image, Thumb } from '../../../../both/models/image.model';
+
+import { default as swal } from 'sweetalert2';
 
 
 
@@ -29,7 +34,10 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
     users: Observable<User[]>;
     uninvitedSub: Subscription;
 
-    user : Meteor.User;
+    thumbs: Observable<Thumb[]>;
+    imagesSub: Subscription;
+    user: Meteor.User;
+    partyAutoSub: Subscription;
 
     constructor(private route: ActivatedRoute, private location: Location) { }
 
@@ -46,10 +54,11 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
                 }
 
                 this.partySub = MeteorObservable.subscribe('party', this.partyId).subscribe((success) => {
-                    console.log(success);
-                    MeteorObservable.autorun().subscribe(() => {
+
+                    this.partyAutoSub = MeteorObservable.autorun().subscribe(() => {
                         this.party = Parties.findOne(this.partyId);
                         this.getUsers(this.party);
+                        this.getImages(this.party);
                     });
                 });
             });// end paramsSub
@@ -62,11 +71,15 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
             this.getUsers(this.party);
         });
 
+        if (this.imagesSub) {
+            this.imagesSub.unsubscribe();
+        }
+
     }
 
     getUsers(party: Party) {
         if (party) {
-            let partyInvited= party.invited || [];
+            let partyInvited = party.invited || [];
             this.users = Users.find({
                 _id: {
                     $nin: partyInvited.concat([this.user._id,]),
@@ -76,10 +89,40 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
         }
     }
 
+
+    getImages(party: Party) {
+        if (party) {
+
+            this.imagesSub = MeteorObservable.subscribe<Image[]>('thumbs', party.images).subscribe(() => {
+
+                this.thumbs = Thumbs.find().zone();
+
+            });
+        }
+
+
+    }
+
+    removeImage(imageId) {
+        console.log(imageId);
+        MeteorObservable.call('removeImage', this.partyId, imageId).subscribe(
+            () => {
+                swal(
+                    'Delete!',
+                    'Your file has been deleted.',
+                    'success'
+                );
+            }, (error) => {
+                console.log(error.reason);
+            });
+    }
+
     ngOnDestroy() {
         this.paramsSub.unsubscribe();
         this.partySub.unsubscribe();
+        this.partyAutoSub.unsubscribe();
         this.uninvitedSub.unsubscribe();
+        this.imagesSub.unsubscribe();
     }
     canActivate() {
         console.log('canactivate : ');
@@ -128,6 +171,22 @@ export class PartyDetailsComponent implements OnInit, OnDestroy, CanActivate {
         }
 
         return false;
+    }
+
+
+    onFileAdd(imageId: string) {
+        console.log('party-details : onFileAdd event :', imageId);
+        if (!Meteor.userId()) {
+            alert('Please log in to change this party');
+            return;
+        }
+
+
+        Parties.update(this.party._id, {
+            $addToSet: {
+                images: imageId
+            }
+        });
     }
 
     goBack() {

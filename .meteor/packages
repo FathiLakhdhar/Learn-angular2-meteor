@@ -25,3 +25,6 @@ anti:fake
 tmeasday:publish-counts
 check
 email
+jquery
+jalik:ufs
+jalik:ufs-gridfs

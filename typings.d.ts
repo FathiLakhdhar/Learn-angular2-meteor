@@ -3,6 +3,21 @@
 /// <reference types="@types/underscore" />
 /// <reference types="@types/chai" />
 /// <reference types="@types/mocha" />
+/// <reference types="@types/node" />
+
+
+declare module "meteor/jalik:ufs" {
+  interface Uploader {
+    start: () => void;
+  }
+ 
+  interface UploadFS {
+    Uploader: (options: any) => Uploader;
+  }
+ 
+  export var UploadFS;
+}
+
 
 declare var Fake: {
     sentence(words: number): string;

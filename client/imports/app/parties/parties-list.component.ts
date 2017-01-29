@@ -10,6 +10,7 @@ import {InjectUser} from 'angular2-meteor-accounts-ui';
 import 'rxjs/add/operator/combineLatest';
 
 import { Parties } from '../../../../both/collections/parties.collection';
+import { Images } from '../../../../both/collections/images.collection';
 import { Party } from '../../../../both/models/party.model';
 import { Options } from '../../../../both/models/options';
 
@@ -69,7 +70,6 @@ export class PartiesListComponent implements OnInit, OnDestroy {
 
         this.autoSub = MeteorObservable.autorun().subscribe(() => {
             this.totalItems = Counts.get('numberOfParties');
-            console.log('totalItems : ' + this.totalItems);
             this.paginationService.setTotalItems(this.paginationService.defaultId(), this.totalItems);
         });
 
@@ -101,7 +101,21 @@ export class PartiesListComponent implements OnInit, OnDestroy {
         this.nameOrder.next(parseInt(nameOrder));
     }
     remove(party: Party) {
-        Parties.remove({ _id: party._id });
+        if (!Meteor.userId()) {
+            alert('Please log in to remove this party');
+            return;
+        }
+        if (Meteor.userId() !== party.owner) {
+            alert('No permissions!');
+            return;
+        }
+
+        MeteorObservable.call('removeParty', party._id).subscribe(
+            ()=>{console.log('method removeParty dane')},
+            (error)=>{console.log(error)}
+            );
+
+
     }
     onPageChanged(page: number) {
         this.curPage.next(page);
