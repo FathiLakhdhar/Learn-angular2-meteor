@@ -51,14 +51,14 @@ Meteor.methods({
       if (indexImg === -1) {//img not found in this party
         throw new Meteor.Error('404','No such image in party');
       }else{
-
-        let ids= party.images.splice(indexImg, 1);
-
+        
+        party.images.splice(indexImg, 1);
+        
         Parties.update({
           _id: partyId
         },
         {
-          $set: { images: ids }
+          $set: { images: party.images || [] }
         }).subscribe(()=>{
           Images.remove({
             _id: imageId
