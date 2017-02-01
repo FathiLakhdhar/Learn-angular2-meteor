@@ -25,7 +25,7 @@
 
         <div *ngFor="let thumb of thumbs | async" class="widht-img-100px">
             <img [src]="thumb.url" alt="party images" class="img-thumbnail">
-            <div (click)="removeImage(thumb.originalId)" class="btn-danger rm-img">x</div>
+            <div *ngIf="thumb.userId === user?._id" (click)="removeImage(thumb.originalId)" class="btn-danger rm-img">x</div>
         </div>
 
     </div>
